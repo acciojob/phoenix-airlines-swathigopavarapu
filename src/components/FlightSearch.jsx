@@ -33,44 +33,48 @@ const FlightSearch = () => {
     <div style={{ textAlign: "center", marginTop: "20px" }}>
       <h2>Search Flights</h2>
 
-      <form onSubmit={handleSearch}>
-        <div>
-          <label>
-            <input
-              type="radio"
-              name="trip"
-              value="oneway"
-              checked={tripType === "oneway"}
-              onChange={() => setTripType("oneway")}
-            /> One-way
-          </label>
-          <label style={{ marginLeft: "10px" }}>
-            <input
-              type="radio"
-              name="trip"
-              value="round"
-              checked={tripType === "round"}
-              onChange={() => setTripType("round")}
-            /> Round-trip
-          </label>
-        </div>
+     <form onSubmit={handleSearch}>
+  {/* Radio buttons */}
+  <label>
+    <input
+      type="radio"
+      name="trip"
+      value="oneway"
+      checked={tripType === "oneway"}
+      onChange={() => setTripType("oneway")}
+    /> One-way
+  </label>
+  <label>
+    <input
+      type="radio"
+      name="trip"
+      value="round"
+      checked={tripType === "round"}
+      onChange={() => setTripType("round")}
+    /> Round-trip
+  </label>
 
-        <div style={{ marginTop: "10px" }}>
-          <input
-            placeholder="From"
-            value={from}
-            onChange={(e) => setFrom(e.target.value)}
-          />
-          <input
-            placeholder="To"
-            value={to}
-            onChange={(e) => setTo(e.target.value)}
-          />
-          <input type="date" value={date} onChange={(e) => setDate(e.target.value)} />
-        </div>
+  {/* Text inputs for From and To */}
+  <input
+    type="text"
+    placeholder="From"
+    value={from}
+    onChange={(e) => setFrom(e.target.value)}
+  />
+  <input
+    type="text"
+    placeholder="To"
+    value={to}
+    onChange={(e) => setTo(e.target.value)}
+  />
 
-        <button type="submit" style={{ marginTop: "10px" }}>Search</button>
-      </form>
+  {/* Date input */}
+  <input type="date" value={date} onChange={(e) => setDate(e.target.value)} />
+
+  {/* Search button */}
+  <button type="submit">Search</button>
+</form>
+
 
       <div style={{ marginTop: "20px" }}>
         {results.map((f) => (

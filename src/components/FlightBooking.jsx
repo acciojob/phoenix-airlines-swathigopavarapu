@@ -27,7 +27,7 @@ const FlightBooking = () => {
       <div>
         <input
           type="text"
-          placeholder="Your Name"
+          placeholder="Name"
           value={name}
           onChange={(e) => setName(e.target.value)}
         />

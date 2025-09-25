@@ -6,7 +6,8 @@ const Landing = () => {
 
   return (
     <div style={{ textAlign: "center", marginTop: "50px" }}>
-      <h1>Flight Booking App</h1>
+      <h1>Welcome to Flight Booking App</h1>
+
       <button onClick={() => history.push("/flight-search")}>Search Flights</button>
     </div>
   );
