@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 
+// Sample flights function
 const sampleFlights = (from, to, date) => [
   { id: 1, airline: "Phoenix Air", from, to, date, time: "06:00", price: 3500 },
   { id: 2, airline: "SkyLine", from, to, date, time: "12:30", price: 4200 },
@@ -17,11 +18,15 @@ const FlightSearch = () => {
 
   const handleSearch = (e) => {
     e.preventDefault();
-    if (!from || !to || !date) return alert("Fill all fields");
+    if (!from || !to || !date) {
+      alert("Please fill all fields");
+      return;
+    }
     setResults(sampleFlights(from, to, date));
   };
 
   const handleBook = (flight) => {
+    // Store selected flight and trip type for booking page
     localStorage.setItem(
       "selectedFlight",
       JSON.stringify({ flight, tripType })
@@ -33,60 +38,83 @@ const FlightSearch = () => {
     <div style={{ textAlign: "center", marginTop: "20px" }}>
       <h2>Search Flights</h2>
 
-     <form onSubmit={handleSearch}>
-  {/* Radio buttons */}
-  <label>
-    <input
-      type="radio"
-      name="trip"
-      value="oneway"
-      checked={tripType === "oneway"}
-      onChange={() => setTripType("oneway")}
-    /> One-way
-  </label>
-  <label>
-    <input
-      type="radio"
-      name="trip"
-      value="round"
-      checked={tripType === "round"}
-      onChange={() => setTripType("round")}
-    /> Round-trip
-  </label>
+      <form onSubmit={handleSearch}>
+        {/* Radio buttons for trip type */}
+        <label>
+          <input
+            type="radio"
+            name="trip"
+            value="oneway"
+            checked={tripType === "oneway"}
+            onChange={() => setTripType("oneway")}
+          />{" "}
+          One-way
+        </label>
+        <label>
+          <input
+            type="radio"
+            name="trip"
+            value="round"
+            checked={tripType === "round"}
+            onChange={() => setTripType("round")}
+          />{" "}
+          Round-trip
+        </label>
 
-  {/* Text inputs for From and To */}
-  <input
-    type="text"
-    placeholder="From"
-    value={from}
-    onChange={(e) => setFrom(e.target.value)}
-  />
-  <input
-    type="text"
-    placeholder="To"
-    value={to}
-    onChange={(e) => setTo(e.target.value)}
-  />
+        <br /><br />
 
-  {/* Date input */}
-  <input type="date" value={date} onChange={(e) => setDate(e.target.value)} />
+        {/* Text inputs for From and To */}
+        <input
+          type="text"
+          placeholder="From"
+          value={from}
+          onChange={(e) => setFrom(e.target.value)}
+        />
+        <input
+          type="text"
+          placeholder="To"
+          value={to}
+          onChange={(e) => setTo(e.target.value)}
+        />
 
-  {/* Search button */}
-  <button type="submit">Search</button>
-</form>
+        {/* Date input */}
+        <input
+          type="date"
+          value={date}
+          onChange={(e) => setDate(e.target.value)}
+        />
 
+        {/* Search button */}
+        <button type="submit">Search</button>
+      </form>
 
-      <div style={{ marginTop: "20px" }}>
-        {results.map((f) => (
-          <div key={f.id} style={{ border: "1px solid gray", margin: "10px", padding: "10px" }}>
-            <p>{f.airline}</p>
-            <p>{f.from} → {f.to}</p>
-            <p>{f.date} • {f.time}</p>
-            <p>₹{f.price}</p>
-            <button onClick={() => handleBook(f)}>Book</button>
-          </div>
-        ))}
-      </div>
+      {/* Flight results */}
+      {results.length > 0 && (
+        <ul style={{ listStyle: "none", padding: 0, marginTop: "20px" }}>
+          {results.map((f) => (
+            <li
+              key={f.id}
+              style={{
+                border: "1px solid gray",
+                margin: "10px auto",
+                padding: "10px",
+                maxWidth: "400px",
+                textAlign: "left",
+              }}
+            >
+              <p><strong>{f.airline}</strong></p>
+              <p>
+                {f.from} → {f.to}
+              </p>
+              <p>
+                {f.date} • {f.time}
+              </p>
+              <p>Price: ₹{f.price}</p>
+              <button onClick={() => handleBook(f)}>Book</button>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 };
