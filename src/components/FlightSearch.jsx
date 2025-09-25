@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 
-const sampleFlights = (from, to, date) => [
-  { id: 1, airline: "Phoenix Air", from, to, date, time: "06:00", price: 3500 },
-  { id: 2, airline: "SkyLine", from, to, date, time: "12:30", price: 4200 },
-  { id: 3, airline: "CloudWays", from, to, date, time: "19:45", price: 3900 },
+const sampleFlights = [
+  { id: 1, airline: "Phoenix Air", from: "Bengaluru", to: "Mumbai", date: "2025-09-25", time: "06:00", price: 3500 },
+  { id: 2, airline: "SkyLine", from: "Bengaluru", to: "Mumbai", date: "2025-09-25", time: "12:30", price: 4200 },
+  { id: 3, airline: "CloudWays", from: "Bengaluru", to: "Mumbai", date: "2025-09-25", time: "19:45", price: 3900 },
 ];
 
 const FlightSearch = () => {
@@ -17,18 +17,17 @@ const FlightSearch = () => {
 
   const handleSearch = (e) => {
     e.preventDefault();
-    if (!from || !to || !date) {
-      alert("Please fill all fields");
-      return;
-    }
-    setResults(sampleFlights(from, to, date));
+    if (!from || !to || !date) return alert("Please fill all fields");
+
+    // Filter flights matching from/to/date
+    const filtered = sampleFlights.filter(
+      (f) => f.from === from && f.to === to && f.date === date
+    );
+    setResults(filtered);
   };
 
   const handleBook = (flight) => {
-    localStorage.setItem(
-      "selectedFlight",
-      JSON.stringify({ flight, tripType })
-    );
+    localStorage.setItem("selectedFlight", JSON.stringify({ flight, tripType }));
     history.push("/flight-booking");
   };
 
@@ -37,54 +36,58 @@ const FlightSearch = () => {
       <h2>Search Flights</h2>
 
       <form onSubmit={handleSearch}>
-        <label>
+        <div style={{ marginBottom: "10px" }}>
+          <label>
+            <input
+              type="radio"
+              name="trip"
+              value="oneway"
+              checked={tripType === "oneway"}
+              onChange={() => setTripType("oneway")}
+            /> One-way
+          </label>
+          <label style={{ marginLeft: "10px" }}>
+            <input
+              type="radio"
+              name="trip"
+              value="round"
+              checked={tripType === "round"}
+              onChange={() => setTripType("round")}
+            /> Round-trip
+          </label>
+        </div>
+
+        <div style={{ marginBottom: "10px" }}>
           <input
-            type="radio"
-            name="trip"
-            value="oneway"
-            checked={tripType === "oneway"}
-            onChange={() => setTripType("oneway")}
-          />{" "}
-          One-way
-        </label>
-        <label>
+            type="text"
+            placeholder="From"
+            value={from}
+            onChange={(e) => setFrom(e.target.value)}
+          />
           <input
-            type="radio"
-            name="trip"
-            value="round"
-            checked={tripType === "round"}
-            onChange={() => setTripType("round")}
-          />{" "}
-          Round-trip
-        </label>
+            type="text"
+            placeholder="To"
+            value={to}
+            onChange={(e) => setTo(e.target.value)}
+            style={{ marginLeft: "10px" }}
+          />
+        </div>
 
-        <br /><br />
-
-        <input
-          type="text"
-          placeholder="From"
-          value={from}
-          onChange={(e) => setFrom(e.target.value)}
-        />
-        <input
-          type="text"
-          placeholder="To"
-          value={to}
-          onChange={(e) => setTo(e.target.value)}
-        />
-
-        <input
-          type="date"
-          value={date}
-          onChange={(e) => setDate(e.target.value)}
-        />
+        <div style={{ marginBottom: "10px" }}>
+          <input
+            type="date"
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+          />
+        </div>
 
         <button type="submit">Search</button>
       </form>
 
-      {/* Flight results wrapped in ul/li */}
       <ul style={{ listStyle: "none", padding: 0, marginTop: "20px" }}>
-        {results.length === 0 && <li>No flights found</li>}
+        {results.length === 0 && from && to && date && (
+          <li>No flights found</li>
+        )}
         {results.map((f) => (
           <li
             key={f.id}
@@ -97,12 +100,8 @@ const FlightSearch = () => {
             }}
           >
             <p><strong>{f.airline}</strong></p>
-            <p>
-              {f.from} → {f.to}
-            </p>
-            <p>
-              {f.date} • {f.time}
-            </p>
+            <p>{f.from} → {f.to}</p>
+            <p>{f.date} • {f.time}</p>
             <p>Price: ₹{f.price}</p>
             <button onClick={() => handleBook(f)}>Book</button>
           </li>
