@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 
-const sampleFlights = [
+const flightsData = [
   { id: 1, airline: "Phoenix Air", from: "Bengaluru", to: "Mumbai", date: "2025-09-25", time: "06:00", price: 3500 },
   { id: 2, airline: "SkyLine", from: "Bengaluru", to: "Mumbai", date: "2025-09-25", time: "12:30", price: 4200 },
   { id: 3, airline: "CloudWays", from: "Bengaluru", to: "Mumbai", date: "2025-09-25", time: "19:45", price: 3900 },
@@ -19,10 +19,10 @@ const FlightSearch = () => {
     e.preventDefault();
     if (!from || !to || !date) return alert("Please fill all fields");
 
-    // Filter flights matching from/to/date
-    const filtered = sampleFlights.filter(
+    const filtered = flightsData.filter(
       (f) => f.from === from && f.to === to && f.date === date
     );
+
     setResults(filtered);
   };
 
@@ -85,9 +85,7 @@ const FlightSearch = () => {
       </form>
 
       <ul style={{ listStyle: "none", padding: 0, marginTop: "20px" }}>
-        {results.length === 0 && from && to && date && (
-          <li>No flights found</li>
-        )}
+        {results.length === 0 && from && to && date && <li>No flights found</li>}
         {results.map((f) => (
           <li
             key={f.id}
@@ -99,10 +97,10 @@ const FlightSearch = () => {
               textAlign: "left",
             }}
           >
-            <p><strong>{f.airline}</strong></p>
+            <p>{f.airline}</p>
             <p>{f.from} → {f.to}</p>
             <p>{f.date} • {f.time}</p>
-            <p>Price: ₹{f.price}</p>
+            <p>₹{f.price}</p>
             <button onClick={() => handleBook(f)}>Book</button>
           </li>
         ))}
