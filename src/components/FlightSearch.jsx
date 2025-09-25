@@ -8,6 +8,7 @@ const sampleFlights = (from, to, date) => [
 ];
 
 const FlightSearch = () => {
+  const [tripType, setTripType] = useState("oneway");
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
   const [date, setDate] = useState("");
@@ -16,39 +17,72 @@ const FlightSearch = () => {
 
   const handleSearch = (e) => {
     e.preventDefault();
+    if (!from || !to || !date) return alert("Fill all fields");
     setResults(sampleFlights(from, to, date));
   };
 
   const handleBook = (flight) => {
-    localStorage.setItem("selectedFlight", JSON.stringify(flight));
+    localStorage.setItem(
+      "selectedFlight",
+      JSON.stringify({ flight, tripType })
+    );
     history.push("/flight-booking");
   };
 
   return (
-    <div style={{ textAlign: "center" }}>
-      {/* <img
-        // src="https://storage.googleapis.com/acciojob-open-file-collections/flight-search.png"
-        alt="Flight Search"
-        style={{ maxWidth: "100%" }}
-      /> */}
+    <div style={{ textAlign: "center", marginTop: "20px" }}>
       <h2>Search Flights</h2>
 
       <form onSubmit={handleSearch}>
-        <input placeholder="From" value={from} onChange={(e) => setFrom(e.target.value)} />
-        <input placeholder="To" value={to} onChange={(e) => setTo(e.target.value)} />
-        <input type="date" value={date} onChange={(e) => setDate(e.target.value)} />
-        <button type="submit">Search</button>
+        <div>
+          <label>
+            <input
+              type="radio"
+              name="trip"
+              value="oneway"
+              checked={tripType === "oneway"}
+              onChange={() => setTripType("oneway")}
+            /> One-way
+          </label>
+          <label style={{ marginLeft: "10px" }}>
+            <input
+              type="radio"
+              name="trip"
+              value="round"
+              checked={tripType === "round"}
+              onChange={() => setTripType("round")}
+            /> Round-trip
+          </label>
+        </div>
+
+        <div style={{ marginTop: "10px" }}>
+          <input
+            placeholder="From"
+            value={from}
+            onChange={(e) => setFrom(e.target.value)}
+          />
+          <input
+            placeholder="To"
+            value={to}
+            onChange={(e) => setTo(e.target.value)}
+          />
+          <input type="date" value={date} onChange={(e) => setDate(e.target.value)} />
+        </div>
+
+        <button type="submit" style={{ marginTop: "10px" }}>Search</button>
       </form>
 
-      {results.map((f) => (
-        <div key={f.id} style={{ border: "1px solid gray", margin: "10px", padding: "10px" }}>
-          <p>{f.airline}</p>
-          <p>{f.from} → {f.to}</p>
-          <p>{f.date} • {f.time}</p>
-          <p>₹{f.price}</p>
-          <button onClick={() => handleBook(f)}>Book</button>
-        </div>
-      ))}
+      <div style={{ marginTop: "20px" }}>
+        {results.map((f) => (
+          <div key={f.id} style={{ border: "1px solid gray", margin: "10px", padding: "10px" }}>
+            <p>{f.airline}</p>
+            <p>{f.from} → {f.to}</p>
+            <p>{f.date} • {f.time}</p>
+            <p>₹{f.price}</p>
+            <button onClick={() => handleBook(f)}>Book</button>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
